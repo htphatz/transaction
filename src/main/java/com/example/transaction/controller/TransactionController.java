@@ -3,14 +3,19 @@ package com.example.transaction.controller;
 import com.example.transaction.dto.StudentRequest;
 import com.example.transaction.model.Student;
 import com.example.transaction.service.impl.StudentService;
+import com.example.transaction.service.impl.TransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-public class StudentController {
+public class TransactionController {
     @Autowired
     private StudentService studentService;
+
+    @Autowired
+    private TransactionService transactionService;
 
     @PostMapping
     public ResponseEntity<Student> createStudent(@RequestBody StudentRequest request) {
@@ -24,21 +29,22 @@ public class StudentController {
 
     @PutMapping("/required/{id}")
     public ResponseEntity<Student> updateStudentRequired(@PathVariable("id") String id) {
-        return ResponseEntity.ok(studentService.updateStudentRequired(id));
+        return ResponseEntity.ok(transactionService.testRequired(id));
     }
 
     @PutMapping("/required-new/{id}")
     public ResponseEntity<Student> updateStudentRequiredNew(@PathVariable("id") String id) {
-        return ResponseEntity.ok(studentService.updateStudentRequiredNew(id));
+        return ResponseEntity.ok(transactionService.testRequiredNew(id));
     }
 
-    @PutMapping("/nested/{id}")
-    public ResponseEntity<Student> updateStudentNested(@PathVariable("id") String id) {
-        return ResponseEntity.ok(studentService.updateStudentNested(id));
+    @PutMapping("/nested/{id1}/{id2}")
+    public ResponseEntity<Void> updateStudentNested(@PathVariable("id1") String id1, @PathVariable("id2") String id2) {
+        transactionService.testRequiredNested(id1, id2);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
-    @DeleteMapping("{id}")
-    public ResponseEntity<String> createStudent(@PathVariable("id") String id)  {
+    @DeleteMapping("{id1}")
+    public ResponseEntity<String> deleteStudent(@PathVariable("id") String id)  {
         studentService.deleteStudent(id);
         return ResponseEntity.ok("Delete success");
     }
