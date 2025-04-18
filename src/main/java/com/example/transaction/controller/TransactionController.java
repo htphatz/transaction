@@ -2,6 +2,7 @@ package com.example.transaction.controller;
 
 import com.example.transaction.dto.StudentRequest;
 import com.example.transaction.model.Student;
+import com.example.transaction.service.impl.PlatformTransactionManagerService;
 import com.example.transaction.service.impl.StudentService;
 import com.example.transaction.service.impl.TransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,9 @@ public class TransactionController {
 
     @Autowired
     private TransactionService transactionService;
+
+    @Autowired
+    private PlatformTransactionManagerService platformTransactionManagerService;
 
     @PostMapping
     public ResponseEntity<Student> createStudent(@RequestBody StudentRequest request) {
@@ -41,6 +45,12 @@ public class TransactionController {
     public ResponseEntity<Void> updateStudentNested(@PathVariable("id1") String id1, @PathVariable("id2") String id2) {
         transactionService.testRequiredNested(id1, id2);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
+    @GetMapping("/platform-transaction-manager")
+    public ResponseEntity<Void> testPlatformTransactionManager() {
+        platformTransactionManagerService.testCustomTransaction();
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("{id1}")
